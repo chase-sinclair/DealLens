@@ -10,7 +10,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 ROOT = Path(__file__).resolve().parent
 SRC_DIR = ROOT / "cims"
 OUT_DIR = ROOT / "pdfs"
-USER_SUPPLIED_PDFS = {"northstar-field-services", "medaxis-revenue-solutions"}
+USER_SUPPLIED_PDFS = {"northstar-field-services", "medaxis-revenue-solutions", "brightcart-consumer-goods"}
 
 
 def markdown_table_to_rows(lines):

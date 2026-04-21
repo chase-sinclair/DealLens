@@ -817,6 +817,7 @@ When working on this project:
 | 2026-04-21 | Phase 2 synthetic CIM dataset completed with three markdown source CIMs, generated PDFs, and expected extraction benchmarks. |
 | 2026-04-21 | User-supplied designed Northstar PDF replaced the generated Northstar PDF as the workflow input artifact; Markdown remains a clean reference source. |
 | 2026-04-21 | User-supplied designed MedAxis PDF replaced the generated MedAxis PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
+| 2026-04-21 | User-supplied designed BrightCart PDF replaced the generated BrightCart PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
 
 ## Open Questions
 

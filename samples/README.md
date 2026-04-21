@@ -12,9 +12,9 @@ Sample PDFs:
 
 1. `pdfs/northstar-field-services.pdf` - user-supplied designed PDF used as the workflow input artifact.
 2. `pdfs/medaxis-revenue-solutions.pdf` - user-supplied designed PDF used as the workflow input artifact.
-3. `pdfs/brightcart-consumer-goods.pdf`
+3. `pdfs/brightcart-consumer-goods.pdf` - user-supplied designed PDF used as the workflow input artifact.
 
-The Northstar and MedAxis Markdown sources remain as clean text references, but the workflow inputs for those samples are the PDFs in `samples/pdfs`.
+The Northstar, MedAxis, and BrightCart Markdown sources remain as clean text references, but the workflow inputs for those samples are the PDFs in `samples/pdfs`.
 
 Extraction note:
 
@@ -22,6 +22,7 @@ Extraction note:
 The current Northstar PDF text extraction includes citation artifacts such as [cite: 238-239].
 Phase 3 prompts should instruct OpenAI to ignore citation markers and never map them into Airtable fields.
 The current MedAxis PDF extracts cleanly without citation artifacts.
+The current BrightCart PDF extracts cleanly without citation artifacts.
 ```
 
 Benchmark expectations:
@@ -46,4 +47,4 @@ Regenerate generated PDFs after editing source markdown:
 python samples\generate_sample_pdfs.py
 ```
 
-The generator skips user-supplied Northstar and MedAxis PDFs if they already exist.
+The generator skips user-supplied Northstar, MedAxis, and BrightCart PDFs if they already exist.
