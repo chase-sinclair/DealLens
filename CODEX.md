@@ -533,7 +533,7 @@ Acceptance criteria:
 
 ### Phase 2 - Sample CIM Dataset
 
-Status: pending
+Status: completed
 
 Objective:
 
@@ -814,6 +814,7 @@ When working on this project:
 | 2026-04-21 | Airtable setup will restart from a clean blank base using CSV imports because the AI-generated base created dependencies and duplicate fields. |
 | 2026-04-21 | Airtable import CSVs were changed to header-only files after Airtable reported invalid sample data during import. |
 | 2026-04-21 | Clean Airtable schema was created with proper primary fields and linked Deal relationships on child tables. |
+| 2026-04-21 | Phase 2 synthetic CIM dataset completed with three markdown source CIMs, generated PDFs, and expected extraction benchmarks. |
 
 ## Open Questions
 
