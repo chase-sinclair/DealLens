@@ -10,6 +10,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 ROOT = Path(__file__).resolve().parent
 SRC_DIR = ROOT / "cims"
 OUT_DIR = ROOT / "pdfs"
+USER_SUPPLIED_PDFS = {"northstar-field-services", "medaxis-revenue-solutions"}
 
 
 def markdown_table_to_rows(lines):
@@ -100,6 +101,9 @@ def build_pdf(markdown_path):
 def main():
     OUT_DIR.mkdir(exist_ok=True)
     for markdown_path in sorted(SRC_DIR.glob("*.md")):
+        if markdown_path.stem in USER_SUPPLIED_PDFS and (OUT_DIR / f"{markdown_path.stem}.pdf").exists():
+            print(f"Skipping user-supplied PDF: {OUT_DIR / f'{markdown_path.stem}.pdf'}")
+            continue
         output_path = build_pdf(markdown_path)
         print(output_path)
 

@@ -815,6 +815,8 @@ When working on this project:
 | 2026-04-21 | Airtable import CSVs were changed to header-only files after Airtable reported invalid sample data during import. |
 | 2026-04-21 | Clean Airtable schema was created with proper primary fields and linked Deal relationships on child tables. |
 | 2026-04-21 | Phase 2 synthetic CIM dataset completed with three markdown source CIMs, generated PDFs, and expected extraction benchmarks. |
+| 2026-04-21 | User-supplied designed Northstar PDF replaced the generated Northstar PDF as the workflow input artifact; Markdown remains a clean reference source. |
+| 2026-04-21 | User-supplied designed MedAxis PDF replaced the generated MedAxis PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
 
 ## Open Questions
 

@@ -18,18 +18,22 @@ Expected missing fields:
 - Detailed customer revenue by year
 - Contract renewal schedule
 - Technician utilization by region
+- Service-line gross margin by geography
+- Monthly financial statements for FY2025 and TTM March 2026
 
 Expected risks:
 
 - Customer concentration
 - Labor availability
 - Add-on integration readiness
+- Founder dependency
 
 Expected diligence questions:
 
 - Provide customer revenue by year for the top 20 customers.
 - Provide contract terms and renewal schedule.
 - Provide technician utilization, turnover, and wage trend by market.
+- Provide current pipeline of potential add-on acquisition targets and any preliminary integration plan.
 
 ## MedAxis Revenue Solutions
 
