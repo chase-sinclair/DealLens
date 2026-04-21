@@ -561,7 +561,7 @@ Acceptance criteria:
 
 ### Phase 3 - Prompting and Structured Extraction
 
-Status: pending
+Status: completed
 
 Objective:
 
@@ -818,6 +818,7 @@ When working on this project:
 | 2026-04-21 | User-supplied designed Northstar PDF replaced the generated Northstar PDF as the workflow input artifact; Markdown remains a clean reference source. |
 | 2026-04-21 | User-supplied designed MedAxis PDF replaced the generated MedAxis PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
 | 2026-04-21 | User-supplied designed BrightCart PDF replaced the generated BrightCart PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
+| 2026-04-21 | Phase 3 prompts completed and live-tested against all three sample CIMs. Results: Northstar proceed / 80, MedAxis request more information / 70, BrightCart pass / 40. |
 
 ## Open Questions
 
