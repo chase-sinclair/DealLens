@@ -4,6 +4,12 @@ Version: v1
 
 The extraction prompt must return valid JSON with this shape.
 
+Zapier-hostable raw schema file:
+
+```text
+prompts/json-output-schema.json
+```
+
 ```json
 {
   "deal": {

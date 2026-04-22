@@ -1,0 +1,247 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "deal",
+    "financial_metrics",
+    "risks",
+    "diligence_questions",
+    "scoring",
+    "memo",
+    "missing_fields",
+    "recommended_next_step",
+    "workflow_metrics"
+  ],
+  "properties": {
+    "deal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "company_name",
+        "sector",
+        "subsector",
+        "headquarters",
+        "founded_year",
+        "ownership_seller_type",
+        "revenue",
+        "revenue_growth",
+        "ebitda",
+        "ebitda_margin",
+        "business_model",
+        "revenue_model",
+        "customer_segments",
+        "customer_concentration",
+        "geographic_footprint",
+        "employee_count",
+        "transaction_type",
+        "banker_advisor",
+        "process_deadline",
+        "investment_highlights",
+        "growth_opportunities",
+        "key_risks_summary",
+        "missing_fields",
+        "fit_score",
+        "data_completeness_score",
+        "recommended_next_step",
+        "deal_status",
+        "memo_link",
+        "cim_document_link",
+        "date_processed",
+        "analyst_owner",
+        "reviewer_notes"
+      ],
+      "properties": {
+        "company_name": { "type": "string" },
+        "sector": { "type": "string" },
+        "subsector": { "type": "string" },
+        "headquarters": { "type": "string" },
+        "founded_year": { "type": ["integer", "string"] },
+        "ownership_seller_type": { "type": "string" },
+        "revenue": { "type": ["number", "string"] },
+        "revenue_growth": { "type": ["number", "string"] },
+        "ebitda": { "type": ["number", "string"] },
+        "ebitda_margin": { "type": ["number", "string"] },
+        "business_model": { "type": "string" },
+        "revenue_model": { "type": "string" },
+        "customer_segments": { "type": "string" },
+        "customer_concentration": { "type": "string" },
+        "geographic_footprint": { "type": "string" },
+        "employee_count": { "type": ["integer", "string"] },
+        "transaction_type": { "type": "string" },
+        "banker_advisor": { "type": "string" },
+        "process_deadline": { "type": "string" },
+        "investment_highlights": { "type": "string" },
+        "growth_opportunities": { "type": "string" },
+        "key_risks_summary": { "type": "string" },
+        "missing_fields": { "type": "string" },
+        "fit_score": { "type": ["integer", "number"] },
+        "data_completeness_score": { "type": ["integer", "number"] },
+        "recommended_next_step": { "type": "string" },
+        "deal_status": { "type": "string" },
+        "memo_link": { "type": "string" },
+        "cim_document_link": { "type": "string" },
+        "date_processed": { "type": "string" },
+        "analyst_owner": { "type": "string" },
+        "reviewer_notes": { "type": "string" }
+      }
+    },
+    "financial_metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "period",
+          "revenue",
+          "revenue_growth",
+          "gross_margin",
+          "ebitda",
+          "ebitda_margin",
+          "capex",
+          "net_working_capital",
+          "free_cash_flow",
+          "notes"
+        ],
+        "properties": {
+          "period": { "type": "string" },
+          "revenue": { "type": ["number", "string"] },
+          "revenue_growth": { "type": ["number", "string"] },
+          "gross_margin": { "type": ["number", "string"] },
+          "ebitda": { "type": ["number", "string"] },
+          "ebitda_margin": { "type": ["number", "string"] },
+          "capex": { "type": ["number", "string"] },
+          "net_working_capital": { "type": ["number", "string"] },
+          "free_cash_flow": { "type": ["number", "string"] },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "risk_category",
+          "risk_description",
+          "severity",
+          "evidence_rationale",
+          "reviewer_status",
+          "owner",
+          "follow_up_needed"
+        ],
+        "properties": {
+          "risk_category": { "type": "string" },
+          "risk_description": { "type": "string" },
+          "severity": { "type": "string" },
+          "evidence_rationale": { "type": "string" },
+          "reviewer_status": { "type": "string" },
+          "owner": { "type": "string" },
+          "follow_up_needed": { "type": "boolean" }
+        }
+      }
+    },
+    "diligence_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question",
+          "category",
+          "priority",
+          "owner",
+          "status",
+          "due_date",
+          "source_rationale"
+        ],
+        "properties": {
+          "question": { "type": "string" },
+          "category": { "type": "string" },
+          "priority": { "type": "string" },
+          "owner": { "type": "string" },
+          "status": { "type": "string" },
+          "due_date": { "type": "string" },
+          "source_rationale": { "type": "string" }
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revenue_fit",
+        "margin_fit",
+        "business_model_fit",
+        "market_fragmentation",
+        "customer_concentration_risk",
+        "growth_opportunity",
+        "data_completeness",
+        "overall_fit_score",
+        "scoring_rationale"
+      ],
+      "properties": {
+        "revenue_fit": { "type": ["integer", "number"] },
+        "margin_fit": { "type": ["integer", "number"] },
+        "business_model_fit": { "type": ["integer", "number"] },
+        "market_fragmentation": { "type": ["integer", "number"] },
+        "customer_concentration_risk": { "type": ["integer", "number"] },
+        "growth_opportunity": { "type": ["integer", "number"] },
+        "data_completeness": { "type": ["integer", "number"] },
+        "overall_fit_score": { "type": ["integer", "number"] },
+        "scoring_rationale": { "type": "string" }
+      }
+    },
+    "memo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "company_overview",
+        "transaction_summary",
+        "business_model",
+        "market_industry_context",
+        "financial_snapshot",
+        "investment_highlights",
+        "growth_thesis",
+        "key_risks",
+        "preliminary_diligence_questions",
+        "initial_recommendation"
+      ],
+      "properties": {
+        "company_overview": { "type": "string" },
+        "transaction_summary": { "type": "string" },
+        "business_model": { "type": "string" },
+        "market_industry_context": { "type": "string" },
+        "financial_snapshot": { "type": "string" },
+        "investment_highlights": { "type": "string" },
+        "growth_thesis": { "type": "string" },
+        "key_risks": { "type": "string" },
+        "preliminary_diligence_questions": { "type": "string" },
+        "initial_recommendation": { "type": "string" }
+      }
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "recommended_next_step": { "type": "string" },
+    "workflow_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fields_extracted_count",
+        "missing_fields_count",
+        "risks_created_count",
+        "diligence_questions_created_count",
+        "estimated_manual_minutes_saved"
+      ],
+      "properties": {
+        "fields_extracted_count": { "type": ["integer", "number"] },
+        "missing_fields_count": { "type": ["integer", "number"] },
+        "risks_created_count": { "type": ["integer", "number"] },
+        "diligence_questions_created_count": { "type": ["integer", "number"] },
+        "estimated_manual_minutes_saved": { "type": ["integer", "number"] }
+      }
+    }
+  }
+}
