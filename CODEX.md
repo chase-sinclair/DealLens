@@ -12,40 +12,57 @@ DealLens: CIM Intelligence Pipeline for Private Equity
 
 ## Project Goal
 
-Build a portfolio-ready private equity automation project that identifies a manual business process, designs an automated solution, and measures the operational impact.
+Build a portfolio-ready private equity automation product that identifies a manual CIM screening process, automates the highest-friction review steps, and surfaces structured deal intelligence in a polished analyst workspace.
 
-DealLens automates first-pass CIM review. A CIM PDF is uploaded to Google Drive, processed through Zapier, converted into structured deal intelligence with AI, stored and reviewed in Airtable, drafted into a Google Docs investment memo, and announced in Slack for analyst review.
+DealLens now automates first-pass CIM review end to end. A CIM PDF is uploaded to Google Drive, processed through Zapier, extracted with PDF.co, structured with OpenAI, written into Airtable, expanded into risks, diligence questions, workflow logs, and investment criteria, summarized in a Google Docs IC memo, and announced in Slack.
 
 ## Positioning
 
 Recruiter-facing summary:
 
-> Built a Zapier-orchestrated CIM review pipeline using OpenAI for document intelligence, Airtable as a PE deal operating system, Google Docs for memo generation, and Slack for analyst review alerts. The workflow converts unstructured CIM PDFs into structured deal records, memo drafts, diligence questions, risk flags, and dashboards measuring processing time, field completeness, and estimated analyst hours saved.
+> Built a three-Zap CIM review pipeline using OpenAI for document intelligence, Airtable as a PE deal operating system, Google Docs for first-pass IC memo generation, and Slack for analyst alerts. The workflow converts unstructured CIM PDFs into structured deal records, linked financial metrics, risks, diligence questions, workflow run logs, investment criteria, and dashboards measuring completeness, time saved, and review readiness.
 
 ## Locked Stack
 
 | Tool | Role |
 |---|---|
-| Google Drive | CIM intake folder and document archive |
-| Zapier | Main automation orchestrator |
-| PDF.co or Docparser | PDF text extraction |
+| Google Drive | CIM intake folder, archive, and memo storage |
+| Zapier | Main multi-Zap orchestration layer |
+| PDF.co | PDF text extraction |
 | OpenAI API | Structured extraction, scoring, risks, diligence questions, memo drafting |
-| Airtable | Deal operating system, review workspace, dashboards, forms, workflow metrics |
+| Airtable | Deal operating system, review workspace, dashboards, workflow metrics |
 | Google Docs | First-pass investment memo output |
-| Slack | Analyst alerts, missing-field notices, workflow summaries |
+| Slack | Analyst alerts and workflow notifications |
 
 Do not use Supabase or Looker Studio for this build.
 
 ## Core Workflow
 
-1. User uploads a CIM PDF to a Google Drive intake folder.
+### Zap 1 - CIM Intake
+
+1. User uploads a CIM PDF to the Google Drive intake folder.
 2. Zapier detects the new file.
-3. PDF.co extracts the raw text. Docparser is reserved as a fallback if PDF.co is insufficient.
-4. OpenAI converts the extracted text into structured deal intelligence.
-5. Zapier creates or updates Airtable records.
-6. Zapier creates a Google Docs first-pass memo.
-7. Zapier posts a Slack alert with review links and key deal context.
-8. Airtable interfaces update automatically for analyst review, diligence tracking, and workflow impact measurement.
+3. PDF.co extracts raw text.
+4. OpenAI converts extracted text into structured deal intelligence.
+5. Code by Zapier normalizes percent and metric fields for Airtable.
+6. Zapier creates or updates Airtable records for Deals, CIM Documents, Financial Metrics, and Workflow Runs.
+7. Zapier posts a Slack alert with key deal context.
+8. Zapier creates a Google Docs first-pass IC memo.
+9. Zapier writes the memo link back to the Deal record.
+10. Zapier loops through and creates linked Risk records.
+
+### Zap 2 - Diligence Builder
+
+1. Airtable watches the `Needs Diligence Questions` view in Deals.
+2. OpenAI generates deal-specific diligence questions from structured deal context.
+3. Zapier creates a Workflow Runs record for the diligence generation event.
+4. Zapier loops through and creates linked Diligence Question records.
+
+### Zap 3 - Investment Criteria Builder
+
+1. Airtable watches the `Needs Investment Criteria` view in Deals.
+2. Code by Zapier derives criterion rows from deal-level fit, margin, growth, and completeness data.
+3. Zapier loops through and creates linked Investment Criteria records.
 
 ## Airtable Application Design
 
@@ -54,7 +71,7 @@ Do not use Supabase or Looker Studio for this build.
 Base name:
 
 ```text
-PE CIM Intelligence Pipeline
+DealLens
 ```
 
 ### Tables
@@ -63,7 +80,7 @@ PE CIM Intelligence Pipeline
 
 Primary table for one record per target company or CIM.
 
-Fields:
+Core fields in production:
 
 - Company Name
 - Sector
@@ -87,7 +104,6 @@ Fields:
 - Investment Highlights
 - Growth Opportunities
 - Key Risks Summary
-- Missing Fields
 - Fit Score
 - Data Completeness Score
 - Recommended Next Step
@@ -97,6 +113,16 @@ Fields:
 - Date Processed
 - Analyst Owner
 - Reviewer Notes
+
+Linked records in production:
+
+- CIM Documents
+- Financial Metrics
+- Risks
+- Diligence Questions
+- Workflow Runs
+- Investment Criteria
+- Review Notes
 
 #### CIM Documents
 
@@ -117,10 +143,11 @@ Fields:
 
 #### Financial Metrics
 
-Stores extracted or calculated financial values.
+Stores extracted financial values for the linked deal.
 
 Fields:
 
+- Metric ID
 - Deal
 - Period
 - Revenue
@@ -139,6 +166,7 @@ Stores AI-flagged risk items for human review.
 
 Fields:
 
+- Risk ID
 - Deal
 - Risk Category
 - Risk Description
@@ -148,23 +176,13 @@ Fields:
 - Owner
 - Follow-Up Needed
 
-Risk categories:
-
-- Financial Quality
-- Customer Concentration
-- Market
-- Competitive Position
-- Management
-- Operations
-- Legal / Regulatory
-- Data Missing
-
 #### Diligence Questions
 
 Tracks generated diligence questions and follow-up ownership.
 
 Fields:
 
+- Question ID
 - Deal
 - Question
 - Category
@@ -173,18 +191,6 @@ Fields:
 - Status
 - Due Date
 - Source / Rationale
-
-Question categories:
-
-- Financial
-- Commercial
-- Customer
-- Market
-- Operations
-- Management
-- Legal
-- Technology
-- Tax
 
 #### Workflow Runs
 
@@ -212,31 +218,21 @@ Fields:
 
 #### Investment Criteria
 
-Stores the target PE thesis and scoring thresholds.
+Stores explainable scoring dimensions tied to a deal.
 
 Fields:
 
 - Criterion
+- Deal
 - Description
-- Weight
-- Target / Threshold
 - Scoring Notes
-
-Default thesis:
-
-- B2B services or niche software-enabled services
-- Revenue between $10M and $100M
-- EBITDA margin greater than 10%
-- Recurring or repeat revenue
-- Fragmented market
-- Low customer concentration
-- US-based
-- Founder-owned or family-owned preferred
-- Clear add-on or value creation opportunity
+- Target / Threshold
+- Weight
+- Score
 
 #### Review Notes
 
-Captures human-in-the-loop feedback.
+Captures human-in-the-loop commentary.
 
 Fields:
 
@@ -251,152 +247,85 @@ Fields:
 
 ## Airtable Interfaces
 
-Build these interfaces inside Airtable Free.
-
-### Analyst Review Queue
+### Executive Dashboard
 
 Purpose:
 
-Give an analyst one place to triage newly processed CIMs.
+Give an investment team a portfolio-level view of processed CIMs, fit scores, pipeline recommendations, and workflow health.
 
-Components:
+Live components:
 
-- List of deals with Deal Status = New or Needs Analyst Review
-- Fit Score
-- Sector
-- Revenue
-- EBITDA
-- Missing Fields
-- Top Risk
-- Recommended Next Step
-- Link to memo
-- Status update controls
+- KPI cards for total deals, average fit score, average data completeness, and open diligence questions
+- Recommendation pipeline chart
+- Deal prioritization matrix using fit score vs data completeness
+- Deal review table with revenue, EBITDA, status, next step, and deadlines
+- Workflow Health table from Workflow Runs
 
-### Deal Detail Page
+### Deal Review
 
 Purpose:
 
-Support full human review for a single target company.
+Support single-deal review for analyst and IC prep.
 
-Components:
+Live components:
 
-- Company overview
-- Transaction summary
-- Financial snapshot
-- Investment highlights
-- Growth opportunities
-- Key risks
-- Diligence questions
-- Reviewer notes
-- Memo and CIM document links
+- Deal Summary
+- Financial Metrics
+- Investment Criteria
+- Risks
+- Diligence Questions
+- Workflow Runs
 
-### Executive Deal Dashboard
+### Operational Views
 
-Purpose:
+Key live views:
 
-Show pipeline-level deal intelligence.
+- Needs Diligence Questions
+- Needs Investment Criteria
 
-Components:
-
-- Deals processed
-- Deals by status
-- Deals by sector
-- Average Fit Score
-- High-fit deals
-- Pass / proceed distribution
-- Upcoming process deadlines
-
-### Workflow Impact Dashboard
-
-Purpose:
-
-Prove measurable process improvement.
-
-Components:
-
-- Average processing duration
-- Estimated manual time saved
-- Total estimated hours saved
-- Average missing fields per CIM
-- Extraction success rate
-- Memo generation success rate
-- Slack notification success rate
-
-### Diligence Tracker
-
-Purpose:
-
-Track generated diligence work as owned action items.
-
-Components:
-
-- Open diligence questions
-- High-priority questions
-- Questions by category
-- Questions by owner
-- Overdue questions
-- Questions tied to high-severity risks
-
-## Forms
-
-### Manual Deal Intake Form
-
-Use when a deal is submitted without the Google Drive CIM upload flow.
-
-Fields:
-
-- Company Name
-- Sector
-- Source
-- Banker / Advisor
-- Revenue Range
-- EBITDA Range
-- CIM Attachment
-- Initial Notes
-- Process Deadline
-
-### Reviewer Feedback Form
-
-Use to capture mock VP, principal, or partner feedback.
-
-Fields:
-
-- Deal
-- Decision
-- Main Concern
-- Follow-Up Request
-- Proceed / Pass / More Info Needed
-- Notes
+These views self-clear after downstream automation creates the linked records.
 
 ## Slack Alert Design
 
-Post to the configured Slack channel when a CIM is processed.
-
-Message template:
+Live Slack output posts to the DealLens alerts channel with:
 
 ```text
-New CIM processed: {Company Name}
+DealLens Alert: New CIM Processed
 
-Fit Score: {Fit Score}/100
-Sector: {Sector}
+Company: {Company Name}
+Sector: {Sector} / {Subsector}
 Revenue: {Revenue}
 EBITDA: {EBITDA}
-EBITDA Margin: {EBITDA Margin}
-
-Top Risk: {Top Risk}
-Missing Fields: {Missing Fields}
+Fit Score: {Fit Score}
+Data Completeness: {Data Completeness}
 Recommended Next Step: {Recommended Next Step}
+Deal Status: {Deal Status}
+Risks Flagged: {Risks Created Count}
 
-Airtable Review: {Airtable URL}
-Memo Draft: {Google Docs URL}
-CIM Source: {Google Drive URL}
+Source Document:
+{Google Drive URL}
 ```
 
-Post a separate alert when extraction fails or when critical fields are missing.
+## Google Docs Memo Design
+
+Live memo output creates a first-pass IC memo with:
+
+- executive summary
+- transaction overview
+- key screening metrics
+- business overview
+- investment highlights
+- growth thesis
+- key risks
+- preliminary diligence priorities
+- source materials
+- internal-use disclaimer
+
+Memo links are written back to `Deals.Memo Link`.
 
 ## OpenAI Output Contract
 
-OpenAI must return structured JSON. Do not depend on prose parsing.
+OpenAI returns structured JSON matching the project schema.
 
 Required top-level keys:
 
@@ -409,377 +338,95 @@ Required top-level keys:
   "scoring": {},
   "memo": {},
   "missing_fields": [],
-  "recommended_next_step": ""
+  "recommended_next_step": "",
+  "workflow_metrics": {}
 }
 ```
-
-Deal object fields:
-
-- company_name
-- sector
-- subsector
-- headquarters
-- founded_year
-- ownership_seller_type
-- revenue
-- revenue_growth
-- ebitda
-- ebitda_margin
-- business_model
-- revenue_model
-- customer_segments
-- customer_concentration
-- geographic_footprint
-- employee_count
-- transaction_type
-- banker_advisor
-- process_deadline
-- investment_highlights
-- growth_opportunities
-- key_risks_summary
-
-Scoring object fields:
-
-- revenue_fit
-- margin_fit
-- business_model_fit
-- market_fragmentation
-- customer_concentration_risk
-- growth_opportunity
-- data_completeness
-- overall_fit_score
-- scoring_rationale
-
-Memo object sections:
-
-- company_overview
-- transaction_summary
-- business_model
-- market_industry_context
-- financial_snapshot
-- investment_highlights
-- growth_thesis
-- key_risks
-- preliminary_diligence_questions
-- initial_recommendation
 
 ## Build Phases
 
 ### Phase 0 - Project Setup and Scope Lock
 
-Status: in_progress
-
-Objective:
-
-Confirm the project boundaries, stack, mock data strategy, and demo success criteria.
-
-Tasks:
-
-- Create or update this CODEX.md file as the source of truth.
-- Create .env.example and .gitignore.
-- Keep real secrets in a local .env file only.
-- Create docs/setup.md for configuration and access notes.
-- Confirm Google Drive, Zapier, Airtable, OpenAI, Google Docs, and Slack access.
-- Use PDF.co as the default PDF text extraction provider for the MVP.
-- Decide whether CIMs will be synthetic PDFs, public investor presentations, or both.
-- Define the demo story and sample deal thesis.
-- Create a lightweight repository structure for prompts, sample data, docs, and implementation notes.
-
-Deliverables:
-
-- CODEX.md
-- .env.example
-- .gitignore
-- docs/setup.md
-- Project folder structure
-- Tool access checklist
-- Initial PE investment criteria
-
-Acceptance criteria:
-
-- All locked tools are named and assigned a role.
-- Non-goals are explicit: no Supabase, no Looker Studio, no real confidential CIMs.
-- The user can explain the project in one recruiter-facing paragraph.
+Status: completed
 
 ### Phase 1 - Data Model and Airtable Base
 
 Status: completed
 
-Objective:
-
-Build the Airtable base as a real PE deal operating system.
-
-Tasks:
-
-- Create Airtable base: PE CIM Intelligence Pipeline.
-- Use a blank Airtable base plus CSV imports instead of the Airtable AI-generated base.
-- Create all core tables.
-- Add fields with correct data types.
-- Configure linked records between Deals, CIM Documents, Financial Metrics, Risks, Diligence Questions, Workflow Runs, and Review Notes.
-- Create views for analyst review, high-fit deals, missing fields, extraction failures, open diligence questions, and workflow metrics.
-- Add initial Investment Criteria records.
-
-Deliverables:
-
-- Airtable base
-- Tables, fields, relationships, and views
-- Initial investment thesis scoring criteria
-
-Acceptance criteria:
-
-- A manually entered deal can link to documents, risks, diligence questions, workflow runs, and review notes.
-- Views support the analyst workflow without requiring raw table browsing.
-- Airtable remains within Free-tier constraints.
-
 ### Phase 2 - Sample CIM Dataset
 
 Status: completed
-
-Objective:
-
-Create realistic, non-confidential CIM inputs for the demo.
-
-Tasks:
-
-- Create 3-5 synthetic CIMs representing strong, medium, and poor-fit deals.
-- Include variation in sector, revenue, EBITDA margin, customer concentration, growth rate, and missing data.
-- Store sample CIM PDFs in Google Drive intake/archive folders.
-- Create expected output notes for each CIM to support accuracy checks.
-
-Deliverables:
-
-- Synthetic CIM PDFs
-- Expected extraction benchmark document
-- Google Drive folder structure
-
-Acceptance criteria:
-
-- At least one CIM should be a strong fit.
-- At least one CIM should have missing critical fields.
-- At least one CIM should produce clear pass or request-more-info recommendation.
-- No confidential or private third-party data is used.
 
 ### Phase 3 - Prompting and Structured Extraction
 
 Status: completed
 
-Objective:
-
-Build reliable OpenAI prompts that convert CIM text into structured JSON.
-
-Tasks:
-
-- Draft the extraction prompt.
-- Draft the scoring prompt or combine scoring into the extraction prompt.
-- Draft the memo generation prompt.
-- Require valid JSON output matching the output contract.
-- Include missing-field detection.
-- Include risk categorization.
-- Include diligence question generation.
-- Test prompts against all sample CIMs.
-- Record prompt versions and observed failures.
-
-Deliverables:
-
-- Extraction prompt
-- Memo prompt
-- Scoring logic
-- JSON schema or output contract documentation
-- Prompt test notes
-
-Acceptance criteria:
-
-- Outputs can be mapped to Airtable fields without manual rewriting.
-- Missing critical fields are explicitly listed.
-- Risks and diligence questions are specific to the deal.
-- Overall fit score includes rationale.
-
 ### Phase 4 - Zapier Orchestration MVP
 
-Status: pending
+Status: completed
 
-Objective:
+Deliverables achieved:
 
-Create the first working automation from CIM upload to Airtable record creation.
-
-Tasks:
-
-- Create Google Drive trigger for new CIM upload.
-- Connect PDF.co or Docparser text extraction.
-- Send extracted text to OpenAI.
-- Parse structured JSON output in Zapier.
-- Create Deal record in Airtable.
-- Create linked CIM Document record.
-- Create linked Risk records.
-- Create linked Diligence Question records.
-- Create Workflow Run record.
-- Add basic error handling paths for extraction or AI failures.
-
-Deliverables:
-
-- Working Zapier MVP
-- Airtable records generated from one uploaded CIM
-- Workflow run logging
-
-Acceptance criteria:
-
-- Uploading a sample CIM creates a complete Airtable deal package.
-- Deal, document, risks, diligence questions, and workflow run records are linked correctly.
-- Failed extraction creates a visible failure state instead of silently stopping.
+- working three-Zap automation architecture
+- linked Airtable records generated from uploaded CIMs
+- Slack alerts
+- Google Docs memo generation
+- workflow run logging
 
 ### Phase 5 - Memo Generation and Slack Alerts
 
-Status: pending
+Status: completed
 
-Objective:
+Deliverables achieved:
 
-Add business-facing outputs: first-pass memo and analyst notification.
-
-Tasks:
-
-- Create Google Docs memo template.
-- Map OpenAI memo sections into the Google Docs template.
-- Store generated memo link on the Airtable Deal record.
-- Configure Slack alert for successful CIM processing.
-- Configure Slack alert for missing critical fields or processing failures.
-- Include Airtable review link, memo link, and CIM source link in Slack messages.
-
-Deliverables:
-
-- Google Docs memo template
-- Generated memo drafts
-- Slack alert templates
-- Working Slack notifications
-
-Acceptance criteria:
-
-- Each processed CIM generates a readable first-pass memo.
-- Slack alert gives enough context for an analyst to decide what to review next.
-- Missing-field alerts are clear and actionable.
+- live Google Docs memo template
+- memo generation in Zap 1
+- memo link write-back to Deals
+- live Slack alert formatting in Zap 1
 
 ### Phase 6 - Airtable Interfaces and Dashboards
 
-Status: pending
+Status: completed
 
-Objective:
+Deliverables achieved:
 
-Turn Airtable into a polished review application and impact dashboard.
-
-Tasks:
-
-- Build Analyst Review Queue interface.
-- Build Deal Detail Page interface.
-- Build Executive Deal Dashboard interface.
-- Build Workflow Impact Dashboard interface.
-- Build Diligence Tracker interface.
-- Validate dashboard metrics against Workflow Runs records.
-- Ensure interface pages are navigable and presentation-ready.
-
-Deliverables:
-
-- Airtable review app
-- Airtable dashboards
-- Demo-ready interface flow
-
-Acceptance criteria:
-
-- A reviewer can process a deal from queue to decision inside Airtable.
-- Dashboards show deal pipeline, workflow impact, and diligence workload.
-- Dashboarding uses Airtable interfaces, not paid extensions.
+- Executive Dashboard
+- Deal Review interface
+- dashboard metrics tied to live workflow data
 
 ### Phase 7 - Measurement and Impact Story
 
-Status: pending
+Status: in_progress
 
-Objective:
+Current tracked signals:
 
-Quantify before/after process improvement.
-
-Tasks:
-
-- Define manual baseline assumptions.
-- Time one manual first-pass CIM review for comparison.
-- Time automated processing and review.
-- Calculate estimated minutes saved per CIM.
-- Track extraction completeness.
-- Track memo generation success.
-- Track missing field rates.
-- Create summary metrics in Airtable.
-
-Deliverables:
-
-- Before/after impact table
-- Airtable metrics
-- Recruiter-ready project narrative
-
-Acceptance criteria:
-
-- Impact story includes time saved, consistency gains, and workflow visibility.
-- Metrics are grounded in tracked Workflow Runs, not only estimates.
-- Any assumptions are documented clearly.
+- Fields Extracted Count
+- Missing Fields Count
+- Risks Created Count
+- Diligence Questions Created Count
+- Estimated Manual Minutes Saved
+- workflow success states across extraction, OpenAI, Airtable, memo, and Slack
 
 ### Phase 8 - QA, Edge Cases, and Hardening
 
-Status: pending
+Status: completed
 
-Objective:
+Acceptance achieved:
 
-Make the demo reliable enough to show confidently.
-
-Tasks:
-
-- Test all sample CIMs end to end.
-- Test missing-field CIM.
-- Test extraction failure handling.
-- Test duplicate upload handling.
-- Test Slack alerts.
-- Test memo link creation.
-- Review Airtable field mappings.
-- Review prompt outputs for hallucinated data.
-- Add explicit "not disclosed" handling where CIM data is unavailable.
-
-Deliverables:
-
-- QA checklist
-- Known limitations list
-- Fixed Zapier/Airtable mapping issues
-
-Acceptance criteria:
-
-- At least 3 sample CIMs run end to end.
-- Failures are visible and understandable.
-- The workflow does not fabricate undisclosed financial values.
-- Demo path is stable.
+- three sample CIMs run end to end
+- failures surfaced and debugged during build
+- generalized output across Northstar, MedAxis, and BrightCart
+- no hardcoded-company leakage in final workflow state
 
 ### Phase 9 - Portfolio Packaging
 
-Status: pending
+Status: in_progress
 
-Objective:
+Remaining work:
 
-Package the project so it can be shared with recruiters and discussed in interviews.
-
-Tasks:
-
-- Write README or case study.
-- Include problem, manual workflow, automated design, architecture, data model, screenshots, metrics, and lessons learned.
-- Create simple architecture diagram.
-- Capture screenshots of Airtable interfaces, Slack alert, memo output, and Zapier flow.
-- Record a short demo script.
-- Add a limitations and future improvements section.
-
-Deliverables:
-
-- Portfolio case study
-- Demo script
-- Architecture diagram
-- Screenshots
-
-Acceptance criteria:
-
-- A recruiter can understand the business value in under 60 seconds.
-- A technical reviewer can understand the architecture and data model.
-- The project demonstrates automation, AI extraction, PE workflow knowledge, Airtable app design, Slack integration, and measurable impact.
+- refresh README and docs
+- finalize recruiter-facing case study
+- finalize demo script and screenshots
 
 ## Tracking Rules for Codex
 
@@ -808,24 +455,21 @@ When working on this project:
 | 2026-04-21 | Looker Studio will not be used; Airtable interfaces will handle dashboarding. |
 | 2026-04-21 | Airtable will be used as an application layer, not just a data store. |
 | 2026-04-21 | Project name selected: DealLens. |
-| 2026-04-21 | PDF.co selected as the default PDF text extraction provider for the MVP; Docparser remains a fallback. |
+| 2026-04-21 | PDF.co selected as the default PDF text extraction provider for the MVP. |
 | 2026-04-21 | Local secrets will live in .env, with .env.example committed as the template. |
-| 2026-04-21 | Airtable, OpenAI, PDF.co, Slack, Google Drive, and Google Docs config values were added locally to .env by the user. |
-| 2026-04-21 | Airtable setup will restart from a clean blank base using CSV imports because the AI-generated base created dependencies and duplicate fields. |
-| 2026-04-21 | Airtable import CSVs were changed to header-only files after Airtable reported invalid sample data during import. |
-| 2026-04-21 | Clean Airtable schema was created with proper primary fields and linked Deal relationships on child tables. |
-| 2026-04-21 | Phase 2 synthetic CIM dataset completed with three markdown source CIMs, generated PDFs, and expected extraction benchmarks. |
-| 2026-04-21 | User-supplied designed Northstar PDF replaced the generated Northstar PDF as the workflow input artifact; Markdown remains a clean reference source. |
-| 2026-04-21 | User-supplied designed MedAxis PDF replaced the generated MedAxis PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
-| 2026-04-21 | User-supplied designed BrightCart PDF replaced the generated BrightCart PDF as the workflow input artifact; extraction verified cleanly without citation artifacts. |
-| 2026-04-21 | Phase 3 prompts completed and live-tested against all three sample CIMs. Results: Northstar proceed / 80, MedAxis request more information / 70, BrightCart pass / 40. |
+| 2026-04-21 | Airtable setup restarted from a clean blank base using CSV imports because the AI-generated base created dependencies and duplicate fields. |
+| 2026-04-21 | Final sample set locked to three synthetic CIMs: Northstar, MedAxis, BrightCart. |
+| 2026-04-22 | Added JSON schema output contract for Zapier structured output via GitHub raw URL. |
+| 2026-04-27 | Confirmed single-loop-per-Zap limitation; split downstream automations into multiple Zaps. |
+| 2026-04-29 | Finalized three-Zap architecture: CIM Intake, Diligence Builder, Investment Criteria Builder. |
+| 2026-05-01 | Airtable interfaces completed with Executive Dashboard and Deal Review pages. |
+| 2026-05-02 | Added Slack alert formatting, Google Docs memo generation, and memo link write-back to Deals. |
 
 ## Open Questions
 
-- Should sample CIMs be fully synthetic, public investor presentations, or a mix?
-- Which Slack channel should receive demo alerts?
-- Should OpenAI calls happen entirely inside Zapier or through a lightweight custom endpoint later?
-- What target PE strategy should the demo thesis emphasize: B2B services, vertical SaaS, healthcare services, industrial services, or another sector?
+- Should BrightCart and MedAxis be re-run periodically to demonstrate repeatability on fresh documents?
+- Should Review Notes become a fully active analyst-collaboration layer in a future phase?
+- Should the next enhancement be failure alerts, memo packet export, or Slack message enrichment?
 
 ## Non-Goals
 
@@ -838,12 +482,10 @@ When working on this project:
 
 ## Future Enhancements
 
-- Add OCR support for scanned PDFs.
-- Add field-level confidence scores.
-- Add source citations or page references for extracted claims.
+- Add failure-path Slack alerts.
 - Add duplicate company detection.
-- Add email-based CIM intake in addition to Google Drive.
+- Add exportable IC packet bundling memo plus linked deal artifacts.
+- Add review-note collaboration workflow.
 - Add benchmark comparison against public comps.
 - Add multi-CIM comparison view.
-- Add exportable investment committee packet.
-- Add human approval before Slack distribution.
+- Add field-level confidence scores and source citations.
