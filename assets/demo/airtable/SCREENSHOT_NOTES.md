@@ -1,6 +1,6 @@
 # Airtable Screenshot Notes
 
-Screenshots received for the Deals table showing the full Northstar Field Services deal record across three horizontal sections, plus the two main Airtable interfaces: Executive Dashboard and Deal Review.
+Screenshots received for the Deals table showing the full Northstar Field Services deal record across three horizontal sections, the two main Airtable interfaces, and the Workflow Runs table.
 
 ## Files to add
 
@@ -17,6 +17,13 @@ airtable-deals-03-scoring-next-step.png
 ```text
 airtable-executive-dashboard.png
 airtable-deal-review-interface.png
+```
+
+### Workflow Runs screenshots
+
+```text
+airtable-workflow-runs-01-statuses.png
+airtable-workflow-runs-02-impact-metrics.png
 ```
 
 ## Deals table scene
@@ -119,6 +126,54 @@ Risks and diligence questions generated
 Investment criteria created for explainable review
 ```
 
+## Workflow Runs scene
+
+Use the two Workflow Runs screenshots together as proof that the product tracks automation status, records created, and estimated manual effort saved.
+
+### `airtable-workflow-runs-01-statuses.png`
+
+Shows:
+
+- Run ID
+- Deal
+- CIM Document
+- Upload Time
+- Processing Completed Time
+- Processing Duration
+- Extraction Status
+- OpenAI Status
+- Airtable Write Status
+- Memo Generation Status
+- Slack Notification Status
+- Fields Extracted Count
+
+### `airtable-workflow-runs-02-impact-metrics.png`
+
+Shows:
+
+- Missing Fields Count
+- Risks Created Count
+- Diligence Questions Created Count
+- Estimated Manual Minutes Saved
+- Error Message
+
+Recommended visual treatment:
+
+1. Show the first Workflow Runs screenshot and highlight successful status fields.
+2. Slide or pan to the second screenshot.
+3. Highlight fields extracted, risks created, diligence questions created, and estimated manual minutes saved.
+4. Keep this short; it supports the impact story but should not distract from the main Airtable interfaces.
+
+Recommended callouts:
+
+```text
+Workflow status logged automatically
+Extraction, OpenAI, Airtable, memo, and Slack steps tracked
+Fields extracted: 30
+Risks created: 5
+Estimated manual minutes saved: 45
+```
+
 ## Recommended callouts for Deals table
 
 Use short callouts over the screenshots:
@@ -133,6 +188,6 @@ Recommended next step: Proceed to initial review
 
 ## Direction for Codex / HyperFrames
 
-Airtable is the hero product surface. Treat the Deals table as proof that the CIM was converted into structured deal data, the Executive Dashboard as proof of portfolio-level visibility, and the Deal Review interface as the final analyst-facing product workspace.
+Airtable is the hero product surface. Treat the Deals table as proof that the CIM was converted into structured deal data, the Executive Dashboard as proof of portfolio-level visibility, the Deal Review interface as the final analyst-facing product workspace, and the Workflow Runs table as proof of operational tracking and measurable time savings.
 
 Do not show the entire table zoomed out if it makes text unreadable. Use horizontal pan, slide transitions, focused zooms, and callouts across the provided screenshots.
