@@ -1,13 +1,22 @@
 # Airtable Screenshot Notes
 
-Screenshots received for the Deals table showing the full Northstar Field Services deal record across three horizontal sections.
+Screenshots received for the Deals table showing the full Northstar Field Services deal record across three horizontal sections, plus the two main Airtable interfaces: Executive Dashboard and Deal Review.
 
 ## Files to add
+
+### Deals table screenshots
 
 ```text
 airtable-deals-01-core-fields.png
 airtable-deals-02-business-model-fields.png
 airtable-deals-03-scoring-next-step.png
+```
+
+### Airtable interface screenshots
+
+```text
+airtable-executive-dashboard.png
+airtable-deal-review-interface.png
 ```
 
 ## Deals table scene
@@ -47,7 +56,70 @@ Recommended visual treatment:
    - Data Completeness
    - Recommended Next Step
 
-## Recommended callouts
+## Executive Dashboard scene
+
+Use `airtable-executive-dashboard.png` as the main portfolio-level product proof.
+
+What it shows:
+
+- Total Deals: 3
+- Average Fit Score: 67
+- Average Data Completeness: 67%
+- Open Diligence Questions: 3
+- Deal Pipeline by Recommendation donut chart
+- Deal Prioritization Matrix
+- Deal Table with Northstar, BrightCart, and MedAxis
+- Workflow Health section with run status and time saved
+
+Recommended visual treatment:
+
+1. Show the full dashboard briefly to establish the interface.
+2. Zoom into KPI cards.
+3. Pan to the recommendation chart and prioritization matrix.
+4. Zoom into the Deal Table to show all three processed CIMs.
+5. End on Workflow Health to show operational tracking.
+
+Recommended callouts:
+
+```text
+3 CIMs processed
+Portfolio-level review dashboard
+Pipeline recommendations visible
+Workflow health tracked automatically
+```
+
+## Deal Review interface scene
+
+Use `airtable-deal-review-interface.png` as the single-deal analyst review hero screen.
+
+What it shows:
+
+- Northstar Field Services selected in the left panel
+- Deal summary fields
+- Financial Metrics
+- Investment Criteria
+- Risks
+- Diligence Questions
+- BrightCart and MedAxis also available in the left-side deal list
+
+Recommended visual treatment:
+
+1. Show the full Deal Review interface.
+2. Zoom into the Northstar title and summary fields.
+3. Pan through Financial Metrics and Investment Criteria.
+4. Pan through Risks and Diligence Questions.
+5. Add a final callout that this is the review-ready workspace created from the CIM.
+
+Recommended callouts:
+
+```text
+Review-ready deal workspace
+Financial metrics linked to the deal
+Risks and diligence questions generated
+Investment criteria created for explainable review
+```
+
+## Recommended callouts for Deals table
 
 Use short callouts over the screenshots:
 
@@ -61,6 +133,6 @@ Recommended next step: Proceed to initial review
 
 ## Direction for Codex / HyperFrames
 
-Airtable is the hero product surface. Treat this scene as the first major proof that the CIM has been converted into structured, reviewable deal data.
+Airtable is the hero product surface. Treat the Deals table as proof that the CIM was converted into structured deal data, the Executive Dashboard as proof of portfolio-level visibility, and the Deal Review interface as the final analyst-facing product workspace.
 
-Do not show the entire table zoomed out if it makes text unreadable. Use horizontal pan, slide transitions, or focused zooms across the three provided screenshots.
+Do not show the entire table zoomed out if it makes text unreadable. Use horizontal pan, slide transitions, focused zooms, and callouts across the provided screenshots.
